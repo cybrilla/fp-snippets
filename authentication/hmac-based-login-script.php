@@ -1,6 +1,6 @@
 <?php
 
-//provide base url name here
+//provide base url here
 $base_url =  "<base_url>";
 //provide tenant name here
 $tenant = "<tenant_name>";
