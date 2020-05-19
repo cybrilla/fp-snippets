@@ -26,10 +26,10 @@ var_dump(http_post($tenant,$api_key_id,$request_url,$hmac_token,$request_time));
 //This function used to generate hmac token 
 function generate_hmac_token($api_key_secret, $body, $current_date,$tenant) 
 {
-    $signed_key = signBody($api_key_secret, $body);
-    $signed_date = signBody($signed_key, $current_date);
-    $signed_tenant = signBody($signed_date, $tenant);
-    return  signBody($signed_tenant, "mfprocybrilla");
+    $signed_key = sign_body($api_key_secret, $body);
+    $signed_date = sign_body($signed_key, $current_date);
+    $signed_tenant = sign_body($signed_date, $tenant);
+    return  sign_body($signed_tenant, "mfprocybrilla");
 }
 
 //This function used to call tenant login api
@@ -66,7 +66,7 @@ function generate_body($request_time, $login_end_point)
 
 }
 
-function signBody($key, $body)
+function sign_body($key, $body)
 {
     return base64_encode(hash_hmac('sha256', $body, $key, true));
 }
