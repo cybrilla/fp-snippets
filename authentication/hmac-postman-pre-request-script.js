@@ -1,38 +1,42 @@
 /**
  *  https://fintechprimitives.com/api/#hmac-token-generation
- *  
- *  This is mainly used as a pre-request-script in postman and uses postman sandbox apis and postman sandbox supported 
+ *
+ *  This is mainly used as a pre-request-script in postman and uses postman sandbox apis and postman sandbox supported
  *  node modules.
- * 
+ *
  *  This script will not work as such in node js or javascript environment, without modifications of this script
- * 
+ *
  */
 const crypto = require('crypto-js');
 const url = pm.request.url.getPath();
+
 // Tenant name shared with the client
 const tenant="<tenant_name>";
 
-// Private api key shared with the client
-const privatekey = "<private api key>";
+//Tenant api key id of the secret shared with the client
+const apiKeyId = "<tenant_api_key_id>"
+
+//Tenant api key secret shared with the client
+const apiKeySecret = "<tenant_api_key_secret>"
 
 // This date will be in this format `20150830T123600Z`. Check the api doc for more details
 const requesttime = new Date().toISOString().replace(/[-:]/g, '').replace(/\.{1}\d*/g, '');
 
 const body = hmacBody();
 console.log("Body = ", body);
-const signedKey = signBody(privatekey, body);
+const signedKey = signBody(apiKeySecret, body);
 const time = new Date().toISOString().replace(/-/g, '').replace(/T.*Z/g, '');
 const signedDate = signBody(signedKey, time);
 const signedTenant = signBody(signedDate, tenant);
 const hmacToken = signBody(signedTenant, 'mfprocybrilla');
 
-console.log("Hmac Token = ", hmacToken);  
+console.log("Hmac Token = ", hmacToken);
 console.log(requesttime)
 
 // Add Basic Header
 pm.request.headers.add({
     key: 'Authorization',
-    value: tenant+":"+hmacToken
+    value: apiKeyId+":"+hmacToken
 });
 
 pm.request.headers.add({
@@ -43,6 +47,11 @@ pm.request.headers.add({
 pm.request.headers.add({
     key: 'Content-Type',
     value: 'application/json'
+});
+
+pm.request.headers.add({
+    key: 'x-tenant-id',
+    value: tenant
 });
 
 // console.log(pm.request.headers)
