@@ -6,7 +6,7 @@ Run the following command to generate the token:
 - > `node index.js --tenant=<tenant> --secret=<secret> --domain=https://<tenant>.mfpro.fintechprimitives.com`
 
 #### Sample Run Command:
-> `node index.js --tenant=cybrilla --secret=dN3CmGkwRxcK7TWnK8tttDWTLH5PGprYN8XCvRQLZVmUN3nkqQ5GPAmZffejxCwp84QaHKKQcdBSNZstUS --domain=https://api.fintechprimitives.com`
+> `node index.js --tenant=cybrilla --apiKeySecret=dN3CmGkwRxcK7TWnK8tttDWTLH5PGprYN8XCvRQLZVmUN3nkqQ5GPAmZffejxCwp84QaHKKQcdBSNZstUS --apiKeyId=rYN8XCvRQLZVmUN3nkqQ5GPAmZffejxCwp84QaHKKQcdBSNZstUS --domain=https://api.fintechprimitives.com`
 
 #### Sample Output:
 > `{ token:
@@ -14,5 +14,6 @@ Run the following command to generate the token:
 
 ##### Command Line Arguments:
 - `tenant` - Tenant Name Provided
-- `secret` - Secret provided.
+- `apiKeySecret` - Api Key Secret
+- `apiKeyId` - Api Key Id
 - `domain` is not mandatory. Default value: `https://api.fintechprimitives.com`
