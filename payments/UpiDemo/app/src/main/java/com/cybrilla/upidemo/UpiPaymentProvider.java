@@ -47,7 +47,7 @@ public class UpiPaymentProvider {
             public void run() {
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    JSONArray supportedUpiApps = getDefaultSupportedUpiApps(UpiPaymentProvider.this.activity);
+                    JSONArray supportedUpiApps = getSupportedUpiApps(UpiPaymentProvider.this.activity);
                     jsonObject.put("upiApps", supportedUpiApps);
                     UpiPaymentProvider.this.webView.loadUrl(String.format("javascript: onLoadUpiApps(%s)", jsonObject));
                 } catch (Exception exception) {
@@ -58,13 +58,18 @@ public class UpiPaymentProvider {
     }
 
 
-    private static JSONArray getDefaultSupportedUpiApps(Context context) {
+    private static JSONArray getSupportedUpiApps(Context context) {
         JSONArray finalAppList = new JSONArray();
         for (UpiApp upiApp : UpiApp.values()) {
             String packageName = upiApp.getPackageName();
             if (isAppInstalled(context, packageName) && isAppUpiReady(context, packageName)) {
                 finalAppList.put(upiApp);
             }
+        }
+
+        //checking if generic UPI intent supported or not
+        if (finalAppList.length() > 0 || isGenericUpiIntentSupported(context)) {
+            finalAppList.put(UpiApp.All_UPI_APPS);
         }
         return finalAppList;
     }
@@ -103,5 +108,12 @@ public class UpiPaymentProvider {
             }
         }
         return false;
+    }
+
+    public static boolean isGenericUpiIntentSupported(Context context) {
+        Intent upiIntent = new Intent();
+        upiIntent.setData(Uri.parse(UPI_URL_SCHEMA));
+        PackageManager packageManager = context.getPackageManager();
+        return packageManager.queryIntentActivities(upiIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 }
