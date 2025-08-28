@@ -19,7 +19,9 @@ public class MainActivity extends AppCompatActivity {
         WebView upiView = findViewById(R.id.upi_view);
         upiView.setScrollContainer(true);
         upiView.setScrollbarFadingEnabled(true);
-        new UpiPaymentProvider(upiView, this).init();
+        WebSettings webSettings = upiView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        new UpiPaymentProvider(upiView, MainActivity.this).init();
 
         //provide payment url here
         String paymentUrl = "<payment-url>";
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 String upiAppProtocol = url.split(":")[0];
                 // Check if the URL starts with "https" or "http"
                 if (url.startsWith("https://") || url.startsWith("http://")) {
+                    new UpiPaymentProvider(upiView, MainActivity.this).init();
                     return super.shouldOverrideUrlLoading(view,url);
                 }
                 try {
